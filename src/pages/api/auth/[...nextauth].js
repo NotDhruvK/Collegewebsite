@@ -21,27 +21,27 @@ export const authOptions = {
         error: '/auth/error', // Error code passed in query string as ?error=
     },
 
-    callbacks: {
+    // callbacks: {
 
-        async signIn({ }) {
-            return true;
-        },
+    //     async signIn({ }) {
+    //         return true;
+    //     },
 
-        jwt: ({ token, user }) => {
-            if (user) {
-                token = {
-                    ...user
-                }
-            }
-            return token
-        },
-        session: ({ token, session }) => {
-            session.user = {
-                ...token
-            }
-            return session
-        },
-    },
+    //     jwt: ({ token, user }) => {
+    //         if (user) {
+    //             token = {
+    //                 ...user
+    //             }
+    //         }
+    //         return token
+    //     },
+    //     session: ({ token, session }) => {
+    //         session.user = {
+    //             ...token
+    //         }
+    //         return session
+    //     },
+    // },
     secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: 'jwt',
@@ -58,31 +58,38 @@ export const authOptions = {
     debug: true,
     callbacks: {
         async signIn({ user, account, profile }) {
-            if (!user?.uid) {
-                const query = {
-                    uid: new RegExp(
-                        `^${user.name.replace(/[^a-zA-Z]/g, '').toLowerCase()}`,
-                        'i'
-                    )
-                }
-                const docs = await User.find(query)
+            // if (!user?.uid) {
+            //     const query = {
+            //         uid: new RegExp(
+            //             `^${user.name.replace(/[^a-zA-Z]/g, '').toLowerCase()}`,
+            //             'i'
+            //         )
+            //     }
+            //     const docs = await User.find(query)
 
-                // Generate new uid for the given name
-                let uid = user.name.replace(/[^a-zA-Z]/g, '').toLowerCase()
-                if (docs.length > 0) {
-                    uid += docs.length
-                }
-                user.uid = uid || nanoid(10)
-            }
-            if (account.provider === 'google') {
-                user = {
-                    id: user.id,
-                    uid: user.uid,
-                    name: user.username,
-                    email: user.email,
-                    image: user.image
-                }
-            }
+            //     // Generate new uid for the given name
+            //     let uid = user.name.replace(/[^a-zA-Z]/g, '').toLowerCase()
+            //     if (docs.length > 0) {
+            //         uid += docs.length
+            //     }
+            //     user.uid = uid || nanoid(10)
+            // }
+            // if (account.provider === 'google') {
+            //     user = {
+            //         id: user.id,
+            //         uid: user.uid,
+            //         name: user.username,
+            //         email: user.email,
+            //         image: user.image
+            //     }
+            // }
+            user = {
+                        id: user.id,
+                        uid: user.uid,
+                        name: user.username,
+                        email: user.email,
+                        image: user.image
+                    }
             return true
         },
         async redirect({ url, baseUrl }) {
